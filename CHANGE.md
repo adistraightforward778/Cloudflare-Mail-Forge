@@ -24,3 +24,5 @@
 | 2026-03-09 17:20 | README.md / .gitignore | Modify | 无 | 增加当前目录结构说明，明确 Web 项目单入口与 `legacy/` 归档区 | 项目主入口更清晰，减少误读 | 本次会话 |
 | 2026-03-09 17:20 | bulk_email_routing.ps1 / scripts/* / Cloudflare批量邮箱地址.md / result.csv / email_list.csv / .history/* | Move | 无 | 将旧 PowerShell/Python 脚本、旧说明文件与历史导出物统一迁入 `legacy/` | 主目录只保留当前 Web 应用所需文件，历史材料可追溯但不再干扰日常使用 | 本次会话 |
 | 2026-03-09 | public/styles.css / public/index.html | Redesign | 无 | 全面重设计 UI 为暗黑精密仪器美学：void 深黑底色、单一陈年铜金强调色、Fraunces 巨型数字、IBM Plex Mono 日志字体、发丝级玻璃面板、顶边光泽高光、交错渐入动画 | 从暖纸色系升级为极简奢华 dark luxury 风格 | 本次会话 |
+| 2026-03-09 | public/styles.css / public/index.html | Fix+Feat | 无 | 修复深色背景下文字对比度（text-2/3/4 透明度上调）、select 下拉深色适配（color-scheme: dark + 固定背景色）、新增顶部导航栏（首页/使用帮助 Tab）、新增完整使用帮助页（6节教程+FAQ折叠） | 可用性大幅提升，完成使用文档闭环 | 本次会话 |
+| 2026-03-09 | README.md / LICENSE | Add | 无 | 撰写完整开源 README（快速开始、Token 获取、用法、环境变量、项目结构、技术栈）；新增 MIT License；独立初始化 git repo 并推送至 github.com/hengfengliya/Cloudflare-Mail-Forge | 项目正式开源 | 本次会话 |

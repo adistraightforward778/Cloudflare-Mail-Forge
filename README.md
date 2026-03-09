@@ -1,27 +1,35 @@
+<div align="center">
+
 # Cloudflare Mail Forge
 
-A local web console for managing Cloudflare Email Routing rules in bulk — create, query, toggle, and delete routing rules across multiple domains from a single page.
+批量管理 Cloudflare 邮件路由规则的本地操作台
 
-![UI Preview](https://raw.githubusercontent.com/hengfengliya/Cloudflare-Mail-Forge/main/docs/preview.png)
+**一次配置，跨域名批量创建 · 查询 · 启停 · 删除**
 
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)]()
 
-## Why
+[English](docs/README_EN.md) · [使用帮助](docs/usage.md) · [更新记录](CHANGE.md)
 
-The Cloudflare dashboard only lets you manage email routing rules one at a time. If you run multiple domains and need to create dozens of addresses pointing to the same inbox, it becomes tedious fast.
-
-This tool collects all that into a single, local-only operations panel:
-
-- **Batch create** — generate address patterns (prefix + index) or paste a manual list, applied to one or many domains at once
-- **Multi-domain** — select any combination of zones; all batch operations write to every selected domain simultaneously
-- **Query & manage** — search, filter, toggle enabled/disabled, and delete rules with checkboxes
-- **Local-only** — binds to `127.0.0.1` only; your API token never leaves your machine
+</div>
 
 ---
 
-## Quick Start
+## 这是什么
 
-**Requirements:** Node.js 18+, a Cloudflare API Token
+Cloudflare 控制台只能逐条管理邮件路由规则。当你有多个域名、需要批量创建几十个转发地址时，手动操作极其低效。
+
+**Mail Forge** 把这些工作收进一张本地页面：
+
+- **批量创建** — 前缀 + 序号自动生成，或手动输入清单，一次操作写入所有选中域名
+- **跨域名** — 勾选任意组合的 Zone，批量操作同时作用于每个域名
+- **查询管理** — 搜索过滤、单条启停、批量删除，规则状态一览无余
+- **本地安全** — 服务仅绑定 `127.0.0.1`，Token 不离开本机
+
+---
+
+## 快速开始
 
 ```bash
 git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
@@ -29,123 +37,109 @@ cd Cloudflare-Mail-Forge
 node server.js
 ```
 
-Open **http://127.0.0.1:3042** in your browser.
+打开浏览器访问 **http://127.0.0.1:3042**
 
-> No `npm install` needed — zero runtime dependencies.
+> **零依赖** — 不需要 `npm install`，Node.js 内置模块直接运行。
 
 ---
 
-## Getting a Cloudflare API Token
+## 获取 Cloudflare API Token
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com) → top-right avatar → **My Profile**
-2. Left sidebar → **API Tokens** → **Create Token**
-3. Choose **Custom token**, add these two permissions:
+1. 进入 [Cloudflare 控制台](https://dash.cloudflare.com) → 右上角头像 → **My Profile**
+2. 左侧 **API Tokens** → **Create Token** → **Custom token**
+3. 添加以下权限：
    - `Zone` → `Zone` → **Read**
    - `Zone` → `Email Routing Rules` → **Edit**
-4. Under *Zone Resources*, select **Specific zone** and pick your domains (or choose *All zones*)
-5. Create and copy the token — it's only shown once
+4. Zone Resources 选择对应域名（或 All zones）
+5. 创建并复制 Token（只显示一次）
 
 ---
 
-## Usage
+## 使用流程
 
-### Step 1 — Configure
+### Step 1 — 控制台配置
 
-Paste your API Token, set a destination email (all routes forward here), and configure defaults for prefix, count, and start index. Click **Save Config** — the domain list will load automatically.
+填写 API Token、默认转发邮箱、默认前缀 / 数量 / 起始序号，点击「保存配置」后自动拉取域名列表。
 
-### Step 2 — Select Domains
+### Step 2 — 域名选择
 
-Check one or more domains. All batch operations in Step 3 will apply to every checked domain simultaneously. Use the search box to filter if you have many zones.
+勾选一个或多个域名。后续批量操作将同时写入所有已选中域名。
 
-### Step 3 — Batch Create
+### Step 3 — 批量新增 Mail
 
-**Pattern mode** — auto-generates addresses:
+**前缀模式**
 
 ```
-prefix=shop  count=3  start=1
+前缀: shop   数量: 3   起始: 1
 → shop001@domain.com
 → shop002@domain.com
 → shop003@domain.com
 ```
 
-**Manual mode** — paste a list of local-parts (one per line):
+**手动模式**：每行一个 local-part，支持直接粘贴完整邮箱地址（自动提取 `@` 前部分）
 
-```
-sales
-support
-hello
-```
+### Step 4 — 规则查询与管理
 
-Both modes write to all selected domains in one operation.
-
-### Step 4 — Query & Manage
-
-Select a domain from the dropdown to load its routing rules. Filter by address, destination, or rule name. Toggle or delete individual rules, or batch-delete with checkboxes.
+选择域名 → 加载规则列表 → 搜索 / 筛选 → 单条操作或勾选批量删除。
 
 ---
 
-## Environment Variables (optional)
+## 环境变量（可选）
 
-Copy `.env.example` to `.env` to pre-fill defaults:
+复制 `.env.example` 为 `.env` 预填默认值：
 
-```bash
-cp .env.example .env
-```
-
-| Variable              | Default     | Description                            |
-|-----------------------|-------------|----------------------------------------|
-| `PORT`                | `3042`      | Local server port                      |
-| `HOST`                | `127.0.0.1` | Bind address                           |
-| `CF_TOKEN`            | —           | Pre-fill API Token                     |
-| `CF_DESTINATION`      | —           | Pre-fill destination email             |
-| `CF_DEFAULT_PREFIX`   | —           | Pre-fill default prefix                |
-| `CF_DEFAULT_COUNT`    | `5`         | Pre-fill default rule count            |
-| `CF_DEFAULT_START`    | `1`         | Pre-fill default start index           |
-| `CF_DELAY_MS`         | `0`         | Delay between batch requests (ms)      |
-
-> **Security:** Config (including token) is stored in `data/app-config.json`. This file is in `.gitignore`. Never commit it.
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `PORT` | `3042` | 本地服务端口 |
+| `HOST` | `127.0.0.1` | 绑定地址 |
+| `CF_TOKEN` | — | 预填 API Token |
+| `CF_DESTINATION` | — | 预填转发目标邮箱 |
+| `CF_DEFAULT_PREFIX` | — | 预填默认前缀 |
+| `CF_DEFAULT_COUNT` | `5` | 预填默认创建数量 |
+| `CF_DEFAULT_START` | `1` | 预填默认起始序号 |
+| `CF_DELAY_MS` | `0` | 批量请求间隔毫秒数 |
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```
 ├── public/
-│   ├── index.html      # Single-page UI
-│   ├── styles.css      # Dark luxury design system
-│   └── app.js          # Frontend logic
+│   ├── index.html      # 单页控制台（含使用帮助页）
+│   ├── styles.css      # 暗色精密风格系统
+│   └── app.js          # 前端逻辑
 ├── src/
-│   ├── cloudflare.js   # Cloudflare API client
-│   └── config-store.js # Local config persistence
-├── data/               # Runtime config (gitignored)
-├── legacy/             # Archived scripts (Python/PowerShell)
-├── server.js           # Local HTTP server
-├── .env.example        # Environment variable template
-└── package.json
+│   ├── cloudflare.js   # Cloudflare API 封装
+│   └── config-store.js # 本地配置持久化
+├── docs/               # 文档
+├── data/               # 运行时配置（已 gitignore）
+├── legacy/             # 归档脚本（Python / PowerShell）
+├── server.js           # 本地 HTTP 服务入口
+└── .env.example        # 环境变量模板
 ```
 
 ---
 
-## Tech Stack
+## 技术栈
 
-| Layer    | Choice                                        |
-|----------|-----------------------------------------------|
-| Server   | Node.js built-in `http` module — no framework |
-| Frontend | Vanilla HTML / CSS / JS — no build step       |
-| API      | Cloudflare Email Routing REST API             |
-| Fonts    | Fraunces · IBM Plex Sans · IBM Plex Mono      |
+| 层 | 选型 |
+|----|------|
+| 服务端 | Node.js 内置 `http` 模块，无框架 |
+| 前端 | 原生 HTML / CSS / JS，无构建步骤 |
+| API | Cloudflare Email Routing REST API |
+| 字体 | Fraunces · IBM Plex Sans · IBM Plex Mono |
 
 ---
 
-## Security Notes
+## 安全说明
 
-- The server only binds to `127.0.0.1` by default — not accessible from your local network
-- Your API Token is stored locally in `data/app-config.json` (gitignored)
-- No data is ever sent to any third-party service
-- To run on a remote server, change `HOST` and ensure access control at the network level
+- 服务默认只绑定 `127.0.0.1`，局域网无法访问
+- 配置（含 Token）保存在本地 `data/app-config.json`（已加入 `.gitignore`）
+- 不向任何第三方服务发送数据
+- 如需部署到远程服务器，请自行添加访问鉴权
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+[MIT](LICENSE) © 2026 hengfengliya
