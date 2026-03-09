@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cloudflare Mail Forge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="background-grid" aria-hidden="true"></div>
+
+    <!-- ── Top Navigation ─────────────────────────────────── -->
+    <nav class="top-nav" role="navigation" aria-label="主导航">
+      <div class="nav-inner">
+        <div class="nav-brand">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M10 2L17.32 6.5V15.5L10 20L2.68 15.5V6.5L10 2Z" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.7"/>
+            <path d="M10 6L14.33 8.5V13.5L10 16L5.67 13.5V8.5L10 6Z" fill="currentColor" opacity="0.25"/>
+          </svg>
+          <span class="nav-brand-name">Mail Forge</span>
+        </div>
+
+        <div class="nav-tabs" role="tablist">
+          <button class="nav-tab active" data-page="home" role="tab" aria-selected="true" type="button">首页</button>
+          <button class="nav-tab" data-page="help" role="tab" aria-selected="false" type="button">使用帮助</button>
+        </div>
+
+        <div class="nav-end">
+          <span class="badge nav-health" id="health-badge">本地服务检查中</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: 首页
+    ══════════════════════════════════════════════════════════ -->
+    <div id="page-home" class="page-section">
+      <main class="app-shell">
+        <section class="hero panel reveal">
+          <div class="hero-copy">
+            <p class="eyebrow">Local Web Console</p>
+            <h1>Cloudflare Mail Forge</h1>
+            <p class="hero-text">
+              把脚本工具收成一张操作台。你可以配置 Cloudflare 凭证，选择域名，批量新增邮箱路由，并在同一页完成查询、启停和删除。
+            </p>
+          </div>
+          <div class="hero-stats">
+            <article class="stat-tile">
+              <span class="stat-label">已载入域名</span>
+              <strong id="stat-zone-count">0</strong>
+            </article>
+            <article class="stat-tile">
+              <span class="stat-label">当前选中域名</span>
+              <strong id="stat-selected-count">0</strong>
+            </article>
+            <article class="stat-tile">
+              <span class="stat-label">当前规则数</span>
+              <strong id="stat-rule-count">0</strong>
+            </article>
+            <article class="stat-tile accent">
+              <span class="stat-label">最近批量创建</span>
+              <strong id="stat-batch-count">0</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="workspace-grid">
+          <section class="panel reveal">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Step 1</p>
+                <h2>控制台配置</h2>
+              </div>
+            </div>
+            <form id="config-form" class="stack-form">
+              <label>
+                <span>Cloudflare API Token</span>
+                <textarea id="token" rows="3" placeholder="粘贴有 Zone Read + Email Routing Rules Write 权限的 Token"></textarea>
+              </label>
+              <label>
+                <span>默认转发目标邮箱</span>
+                <input id="destinationEmail" type="email" placeholder="name@example.com" />
+              </label>
+              <div class="compact-grid">
+                <label>
+                  <span>默认前缀</span>
+                  <input id="defaultPrefix" type="text" placeholder="promo" />
+                </label>
+                <label>
+                  <span>默认数量</span>
+                  <input id="defaultCount" type="number" min="1" step="1" />
+                </label>
+                <label>
+                  <span>默认起始序号</span>
+                  <input id="defaultStart" type="number" min="1" step="1" />
+                </label>
+                <label>
+                  <span>请求间隔 (ms)</span>
+                  <input id="delayMs" type="number" min="0" step="100" />
+                </label>
+              </div>
+              <div class="actions">
+                <button class="button primary" type="submit">保存配置</button>
+                <button class="button ghost" type="button" id="reload-zones">刷新域名</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Step 2</p>
+                <h2>域名选择</h2>
+              </div>
+              <span class="meta-text" id="zone-meta">先保存 Token，再拉取域名列表</span>
+            </div>
+            <div class="toolbar">
+              <input id="zone-search" type="search" placeholder="搜索域名..." />
+              <button class="button ghost" type="button" id="select-visible-zones">选中可见域名</button>
+            </div>
+            <div id="zone-list" class="zone-list empty-state">当前还没有域名数据。</div>
+          </section>
+
+          <section class="panel reveal">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Step 3</p>
+                <h2>批量新增 Mail</h2>
+              </div>
+              <span class="meta-text">一组 local-part，可同时打到多个域名</span>
+            </div>
+            <form id="batch-form" class="stack-form">
+              <div class="mode-switch" role="tablist" aria-label="创建模式">
+                <button class="mode-chip active" data-mode="pattern" type="button">前缀/随机批量</button>
+                <button class="mode-chip" data-mode="manual" type="button">手动地址清单</button>
+              </div>
+
+              <div id="pattern-fields" class="compact-grid">
+                <label>
+                  <span>前缀</span>
+                  <input id="batchPrefix" type="text" placeholder="留空则随机生成" />
+                </label>
+                <label>
+                  <span>数量</span>
+                  <input id="batchCount" type="number" min="1" step="1" />
+                </label>
+                <label>
+                  <span>起始序号</span>
+                  <input id="batchStart" type="number" min="1" step="1" />
+                </label>
+                <label class="checkbox-line">
+                  <input id="batchEnabled" type="checkbox" checked />
+                  <span>创建后立即启用</span>
+                </label>
+              </div>
+
+              <label id="manual-fields" class="hidden">
+                <span>手动输入</span>
+                <textarea
+                  id="manualInput"
+                  rows="6"
+                  placeholder="每行一个 local-part，例如 sales、care、vip&#10;也可直接输入完整邮箱地址"
+                ></textarea>
+              </label>
+
+              <div class="actions">
+                <button class="button primary" type="submit">开始批量创建</button>
+                <span class="meta-text" id="batch-target-hint">未选择域名</span>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel reveal rules-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Step 4</p>
+                <h2>规则查询与管理</h2>
+              </div>
+              <div class="inline-actions">
+                <button class="button ghost" type="button" id="refresh-rules">刷新规则</button>
+                <button class="button danger" type="button" id="delete-selected-rules">删除选中</button>
+              </div>
+            </div>
+
+            <div class="rules-toolbar toolbar">
+              <select id="active-zone"></select>
+              <input id="rule-search" type="search" placeholder="搜邮箱地址 / 目标邮箱 / 规则名" />
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th><input id="select-all-rules" type="checkbox" /></th>
+                    <th>邮箱地址</th>
+                    <th>目标邮箱</th>
+                    <th>状态</th>
+                    <th>规则名</th>
+                    <th>优先级</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="rules-body">
+                  <tr>
+                    <td colspan="7" class="empty-cell">先选择一个域名，再查询规则。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section class="panel reveal log-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Trace</p>
+              <h2>操作日志</h2>
+            </div>
+            <button class="button ghost" type="button" id="clear-log">清空</button>
+          </div>
+          <div id="log-list" class="log-list">
+            <article class="log-entry info">控制台初始化中...</article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: 使用帮助
+    ══════════════════════════════════════════════════════════ -->
+    <div id="page-help" class="page-section hidden">
+      <div class="help-shell">
+
+        <header class="help-hero panel reveal">
+          <p class="eyebrow">Documentation</p>
+          <h1>使用帮助</h1>
+          <p class="help-hero-sub">从获取 API Token 到批量管理邮箱路由，完整操作指南。</p>
+        </header>
+
+        <div class="help-body">
+
+          <!-- 一、前置准备 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">01</span>
+              <h2>前置准备：获取 API Token</h2>
+            </div>
+            <p>Mail Forge 通过 Cloudflare API Token 操作你的账号，Token 需要具备以下两项权限：</p>
+            <ul class="help-list">
+              <li><strong>Zone → Zone → Read</strong> — 读取域名列表</li>
+              <li><strong>Zone → Email Routing Rules → Edit</strong> — 创建、修改、删除邮件路由规则</li>
+            </ul>
+            <h3>创建步骤</h3>
+            <ol class="help-steps">
+              <li>登录 <strong>Cloudflare 控制台</strong> → 右上角头像 → <em>My Profile</em></li>
+              <li>左侧导航选择 <em>API Tokens</em> → 点击 <strong>Create Token</strong></li>
+              <li>选择 <strong>Custom token</strong>，添加上述两项权限</li>
+              <li>在 <em>Zone Resources</em> 中选择 <strong>Specific zone</strong> 并勾选你要管理的域名（也可选 All zones）</li>
+              <li>确认并创建，复制显示的 Token</li>
+            </ol>
+            <div class="help-callout warn">
+              <strong>注意</strong> — Token 只显示一次。请在创建后立即复制保存，关闭页面后将无法再查看。
+            </div>
+          </section>
+
+          <!-- 二、控制台配置 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">02</span>
+              <h2>Step 1 — 控制台配置</h2>
+            </div>
+            <p>填写全部字段后点击「保存配置」，系统会自动拉取你账号下的域名列表。</p>
+            <table class="help-table">
+              <thead>
+                <tr><th>字段</th><th>说明</th><th>示例</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>API Token</code></td>
+                  <td>粘贴上一步创建的 Token</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><code>默认转发目标邮箱</code></td>
+                  <td>所有路由规则统一转发到此地址</td>
+                  <td>you@gmail.com</td>
+                </tr>
+                <tr>
+                  <td><code>默认前缀</code></td>
+                  <td>批量创建时邮箱地址的前缀部分</td>
+                  <td>promo</td>
+                </tr>
+                <tr>
+                  <td><code>默认数量</code></td>
+                  <td>每次批量创建的数量</td>
+                  <td>5</td>
+                </tr>
+                <tr>
+                  <td><code>默认起始序号</code></td>
+                  <td>编号从几开始，默认 1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td><code>请求间隔 (ms)</code></td>
+                  <td>批量创建时每条请求之间的等待时间，防止触发 API 速率限制</td>
+                  <td>300</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="help-callout info">
+              配置数据保存在本地 <code>data/app-config.json</code>，包含 Token。请勿将此文件提交至公开代码仓库。
+            </div>
+          </section>
+
+          <!-- 三、域名选择 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">03</span>
+              <h2>Step 2 — 域名选择</h2>
+            </div>
+            <p>批量创建操作会同时作用于所有已勾选的域名。</p>
+            <ul class="help-list">
+              <li>勾选域名卡片左侧的复选框即可选中；支持多选。</li>
+              <li>搜索框支持关键词实时过滤域名列表。</li>
+              <li>点击「选中可见域名」可一次勾选当前搜索结果中的所有域名。</li>
+              <li>点击域名卡片右侧「查看规则」按钮，可直接跳转至 Step 4 并加载该域名的路由规则。</li>
+              <li>已选中的域名会以金色边框高亮显示，并在 Hero 区域统计栏更新数量。</li>
+            </ul>
+          </section>
+
+          <!-- 四、批量新增 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">04</span>
+              <h2>Step 3 — 批量新增 Mail</h2>
+            </div>
+            <p>支持两种创建模式，通过顶部 Tab 切换。</p>
+
+            <h3>模式 A：前缀/随机批量</h3>
+            <p>系统自动生成一组邮箱地址。</p>
+            <ul class="help-list">
+              <li>设置前缀 + 数量 + 起始序号后点击「开始批量创建」。</li>
+              <li><strong>前缀留空</strong>时自动生成随机字符串作为 local-part。</li>
+              <li>例：前缀 <code>vip</code>，数量 <code>3</code>，起始 <code>1</code> → 生成 <code>vip001@domain.com</code>、<code>vip002@domain.com</code>、<code>vip003@domain.com</code></li>
+            </ul>
+
+            <h3>模式 B：手动地址清单</h3>
+            <p>逐行输入你想要的地址：</p>
+            <ul class="help-list">
+              <li>每行一个 local-part，例如 <code>sales</code>、<code>care</code>、<code>vip</code></li>
+              <li>也可输入完整邮箱地址，系统会自动提取 <code>@</code> 前的部分</li>
+              <li>输入的 local-part 会被写入所有已选中域名，形成多条路由规则</li>
+            </ul>
+
+            <div class="help-callout info">
+              「创建后立即启用」勾选时，新建规则的状态为 enabled；取消勾选则默认为 disabled，创建后需手动在 Step 4 启用。
+            </div>
+          </section>
+
+          <!-- 五、规则管理 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">05</span>
+              <h2>Step 4 — 规则查询与管理</h2>
+            </div>
+            <ul class="help-list">
+              <li>顶部下拉选择要查看的域名，规则列表自动加载。</li>
+              <li>搜索框支持按邮箱地址、目标邮箱、规则名三个维度过滤。</li>
+              <li>每条规则右侧有「启用/停用」和「删除」两个操作按钮。</li>
+              <li>勾选多条规则后，点击面板头部的「删除选中」可批量删除。</li>
+              <li>表头复选框可一次全选当前可见规则。</li>
+              <li>点击「刷新规则」可重新从 Cloudflare 拉取最新状态。</li>
+            </ul>
+          </section>
+
+          <!-- 六、常见问题 -->
+          <section class="help-section panel reveal">
+            <div class="help-section-label">
+              <span class="help-num">06</span>
+              <h2>常见问题</h2>
+            </div>
+
+            <div class="help-faq">
+              <details class="faq-item">
+                <summary>保存 Token 后为什么拉取不到域名？</summary>
+                <p>检查 Token 权限是否包含 <strong>Zone Read</strong>。部分账号在创建 Token 时 Zone Resources 选择了 <em>All zones</em>，但由于账号设置某些域名被排除在外。建议明确选择具体域名。</p>
+              </details>
+              <details class="faq-item">
+                <summary>批量创建时部分失败是正常的吗？</summary>
+                <p>是的。如果同名路由规则已存在，Cloudflare API 会返回错误，该条创建失败但不影响其他条。操作日志中会分别显示成功数和失败数。</p>
+              </details>
+              <details class="faq-item">
+                <summary>请求间隔设置多少合适？</summary>
+                <p>Cloudflare API 有速率限制。建议至少设置 <strong>200ms</strong>，域名或规则数量较多时建议 <strong>500ms</strong> 以上，以避免触发 429 错误。</p>
+              </details>
+              <details class="faq-item">
+                <summary>如何批量操作多个域名？</summary>
+                <p>在 Step 2 中勾选多个域名后，Step 3 的批量创建会将相同的 local-part 写入所有已选中域名。例如选中 3 个域名、创建 5 条规则，实际会创建 15 条路由规则。</p>
+              </details>
+              <details class="faq-item">
+                <summary>本地服务显示异常怎么办？</summary>
+                <p>通常是 Node.js 服务未启动。在项目目录执行 <code>node server.js</code> 或 <code>npm start</code>，然后刷新页面。</p>
+              </details>
+              <details class="faq-item">
+                <summary>配置数据存在哪里，安全吗？</summary>
+                <p>配置（含 API Token）保存在本地 <code>data/app-config.json</code>，不会上传任何服务器。确保此文件在 <code>.gitignore</code> 中，不要将其推送至公开仓库。</p>
+              </details>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Page switching script (before module to ensure early binding) -->
+    <script>
+      document.querySelectorAll('.nav-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var target = tab.dataset.page;
+          document.querySelectorAll('.nav-tab').forEach(function(t) {
+            t.classList.toggle('active', t.dataset.page === target);
+            t.setAttribute('aria-selected', String(t.dataset.page === target));
+          });
+          document.querySelectorAll('.page-section').forEach(function(p) {
+            p.classList.toggle('hidden', p.id !== 'page-' + target);
+          });
+        });
+      });
+    </script>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

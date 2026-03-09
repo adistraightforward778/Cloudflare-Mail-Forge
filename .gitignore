@@ -1,0 +1,7 @@
+.env
+data/app-config.json
+email_list.csv
+result.csv
+node_modules
+legacy/.history/
+legacy/scripts/__pycache__/
