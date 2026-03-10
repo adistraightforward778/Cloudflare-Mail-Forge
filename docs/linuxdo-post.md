@@ -1,4 +1,8 @@
-# 10s 自建 Cloudflare 临时域名邮箱，附体验网址，已开源，所有数据保存在本地
+# 无门槛，3s 自建 Cloudflare 无限域名邮箱，附体验网址，已开源，所有数据保存在本地
+
+**🌐 在线体验：** https://cloudflare-mail-forge.vercel.app
+
+**📦 开源地址：** https://github.com/hengfengliya/Cloudflare-Mail-Forge
 
 ---
 
@@ -25,9 +29,9 @@ Cloudflare 的 Email Routing 功能本身很好用，但控制台只能逐条管
 
 ## 体验 / 获取
 
-**开源地址：** https://github.com/hengfengliya/Cloudflare-Mail-Forge
+不想装环境？直接打开 **https://cloudflare-mail-forge.vercel.app** 在线用，Token 只存在你的浏览器本地，不经过任何服务器。
 
-三行命令跑起来：
+想本地跑？三行命令：
 
 ```bash
 git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
@@ -87,8 +91,8 @@ tmp003@yourdomain.com  →  yourealmail@gmail.com
 
 ## 数据安全
 
-- 服务只绑定 `127.0.0.1`，局域网无法访问
-- 配置（含 API Token）只存在本机 `data/app-config.json`，不上传任何服务器
+- 配置（含 API Token）只存在**浏览器 localStorage**，不上传任何服务器
+- 本地部署版服务只绑定 `127.0.0.1`，局域网无法访问
 - 代码完全开源，可以自己审查
 
 ---
@@ -97,7 +101,7 @@ tmp003@yourdomain.com  →  yourealmail@gmail.com
 
 为了保持「三行启动、零依赖」的目标，后端只用了 Node.js 原生 `http` 模块，前端是原生 HTML / CSS / JS，没有任何构建步骤。
 
-Token 鉴权全部在本地服务这一层处理，浏览器侧只与 `127.0.0.1:3042` 通信。
+Token 保存在浏览器 localStorage，每次请求通过自定义 Header `X-CF-Token` 传到服务端，不写入任何数据库或文件。本地部署时浏览器只与 `127.0.0.1:3042` 通信；Vercel 版通过 Serverless Functions 中转，Token 同样不落地。
 
 项目还保留了早期的 Python / PowerShell 脚本版本（在 `legacy/` 目录），对命令行更熟悉的朋友也可以直接用脚本。
 
