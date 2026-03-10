@@ -53,6 +53,7 @@ const elements = {
   rulesBody: document.querySelector("#rules-body"),
   selectAllRules: document.querySelector("#select-all-rules"),
   selectVisibleZones: document.querySelector("#select-visible-zones"),
+  clearSelectedZones: document.querySelector("#clear-selected-zones"),
   statBatchCount: document.querySelector("#stat-batch-count"),
   statRuleCount: document.querySelector("#stat-rule-count"),
   statSelectedCount: document.querySelector("#stat-selected-count"),
@@ -226,24 +227,24 @@ function renderZones() {
 }
 
 function renderZoneSelect() {
-  const preferred = state.zones.filter((zone) => state.selectedZoneIds.has(zone.id));
-  const list = preferred.length > 0 ? preferred : state.zones;
+  const selected = state.zones.filter((zone) => state.selectedZoneIds.has(zone.id));
 
   elements.activeZone.innerHTML = "";
-  if (list.length === 0) {
+
+  if (selected.length === 0) {
     const option = document.createElement("option");
-    option.textContent = "暂无可查询域名";
+    option.textContent = "请先在 Step 2 勾选域名";
     option.value = "";
     elements.activeZone.append(option);
     state.activeZoneId = "";
     return;
   }
 
-  if (!list.some((zone) => zone.id === state.activeZoneId)) {
-    state.activeZoneId = list[0].id;
+  if (!selected.some((zone) => zone.id === state.activeZoneId)) {
+    state.activeZoneId = selected[0].id;
   }
 
-  for (const zone of list) {
+  for (const zone of selected) {
     const option = document.createElement("option");
     option.value = zone.id;
     option.textContent = zone.name;
@@ -483,6 +484,17 @@ elements.selectVisibleZones.addEventListener("click", async () => {
   saveConfig(false);
   renderZones();
   renderZoneSelect();
+  updateBatchHint();
+  updateStats();
+});
+elements.clearSelectedZones.addEventListener("click", () => {
+  state.selectedZoneIds.clear();
+  state.activeZoneId = "";
+  state.rules = [];
+  saveConfig(false);
+  renderZones();
+  renderZoneSelect();
+  renderRules();
   updateBatchHint();
   updateStats();
 });
