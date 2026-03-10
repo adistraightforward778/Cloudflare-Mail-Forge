@@ -9,6 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)]()
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue.svg)](https://github.com/hengfengliya/Cloudflare-Mail-Forge/pkgs/container/cloudflare-mail-forge)
 
 [English](docs/README_EN.md) · [使用帮助](docs/usage.md) · [更新记录](CHANGE.md)
 
@@ -31,21 +32,17 @@ Cloudflare 控制台只能逐条管理邮件路由规则。当你有多个域名
 
 ## 快速开始
 
-### 方式一：Node.js 直接运行
+### 方式一：Vercel 在线版（无需安装）
 
-```bash
-git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
-cd Cloudflare-Mail-Forge
-node server.js
-```
-
-> **零依赖** — 不需要 `npm install`，Node.js 18+ 直接运行。
+直接访问 **https://cloudflare-mail-forge.vercel.app**
 
 ### 方式二：Docker
 
 ```bash
 docker run -p 3042:3042 ghcr.io/hengfengliya/cloudflare-mail-forge
 ```
+
+打开 **http://127.0.0.1:3042** 即可使用。
 
 或用 Docker Compose：
 
@@ -55,13 +52,17 @@ cd Cloudflare-Mail-Forge
 docker compose up -d
 ```
 
-### 方式三：Vercel 在线版
+### 方式三：Node.js 直接运行
 
-直接访问 **https://cloudflare-mail-forge.vercel.app**，无需任何安装。
+```bash
+git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
+cd Cloudflare-Mail-Forge
+node server.js
+```
 
----
+打开 **http://127.0.0.1:3042** 即可使用。
 
-打开浏览器访问 **http://127.0.0.1:3042**（本地部署）
+> **零依赖** — 不需要 `npm install`，Node.js 18+ 直接运行。
 
 ---
 
@@ -136,10 +137,11 @@ docker compose up -d
 ├── docs/               # 文档
 ├── data/               # 运行时配置（已 gitignore）
 ├── legacy/             # 归档脚本（Python / PowerShell）
-├── server.js           # 本地 HTTP 服务入口
+├── api/                # Vercel Serverless Functions
+├── server.js           # 本地 / Docker HTTP 服务入口
 ├── Dockerfile          # Docker 镜像构建
 ├── docker-compose.yml  # Docker Compose 一键启动
-└── .env.example        # 环境变量模板
+└── vercel.json         # Vercel 部署配置
 ```
 
 ---

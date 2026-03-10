@@ -29,9 +29,20 @@ Cloudflare 的 Email Routing 功能本身很好用，但控制台只能逐条管
 
 ## 体验 / 获取
 
-不想装环境？直接打开 **https://cloudflare-mail-forge.vercel.app** 在线用，Token 只存在你的浏览器本地，不经过任何服务器。
+**三种方式，任选其一：**
 
-想本地跑？三行命令：
+**① 在线版（零安装）**
+直接打开 https://cloudflare-mail-forge.vercel.app，Token 只存在你的浏览器本地。
+
+**② Docker（推荐自部署）**
+
+```bash
+docker run -p 3042:3042 ghcr.io/hengfengliya/cloudflare-mail-forge
+```
+
+打开 http://127.0.0.1:3042 即可。
+
+**③ Node.js 直接跑**
 
 ```bash
 git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
@@ -39,9 +50,7 @@ cd Cloudflare-Mail-Forge
 node server.js
 ```
 
-然后打开 http://127.0.0.1:3042 就可以用了。
-
-> 需要 Node.js 18+，不需要安装任何额外依赖。
+> Node.js 18+，零依赖，不需要 npm install。
 
 ---
 

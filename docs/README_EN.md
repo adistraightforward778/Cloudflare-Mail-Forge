@@ -9,6 +9,7 @@ A local web console for bulk management of Cloudflare Email Routing rules
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](../LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org)
 [![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)]()
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue.svg)](https://github.com/hengfengliya/Cloudflare-Mail-Forge/pkgs/container/cloudflare-mail-forge)
 
 [中文](../README.md) · [GitHub](https://github.com/hengfengliya/Cloudflare-Mail-Forge)
 
@@ -31,6 +32,28 @@ The Cloudflare dashboard only lets you manage email routing rules one at a time.
 
 ## Quick Start
 
+### Option 1: Vercel (no install)
+
+Visit **https://cloudflare-mail-forge.vercel.app** directly.
+
+### Option 2: Docker
+
+```bash
+docker run -p 3042:3042 ghcr.io/hengfengliya/cloudflare-mail-forge
+```
+
+Or with Docker Compose:
+
+```bash
+git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
+cd Cloudflare-Mail-Forge
+docker compose up -d
+```
+
+Open **http://127.0.0.1:3042** in your browser.
+
+### Option 3: Node.js
+
 ```bash
 git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
 cd Cloudflare-Mail-Forge
@@ -39,7 +62,7 @@ node server.js
 
 Open **http://127.0.0.1:3042** in your browser.
 
-> **Zero dependencies** — no `npm install` needed. Runs on Node.js built-in modules only.
+> **Zero dependencies** — no `npm install` needed. Node.js 18+ only.
 
 ---
 
@@ -114,8 +137,11 @@ Copy `.env.example` to `.env` to pre-fill defaults:
 ├── docs/               # Documentation
 ├── data/               # Runtime config (gitignored)
 ├── legacy/             # Archived scripts (Python / PowerShell)
-├── server.js           # Local HTTP server entry point
-└── .env.example        # Environment variable template
+├── api/                # Vercel Serverless Functions
+├── server.js           # Local / Docker HTTP server entry point
+├── Dockerfile          # Docker image build
+├── docker-compose.yml  # Docker Compose one-command start
+└── vercel.json         # Vercel deployment config
 ```
 
 ---
@@ -133,10 +159,10 @@ Copy `.env.example` to `.env` to pre-fill defaults:
 
 ## Security
 
-- Server binds to `127.0.0.1` by default — not accessible from your local network
-- Config (including Token) is stored in local `data/app-config.json` (gitignored)
+- Config (including Token) is stored in **browser localStorage only** — never written to any file or database
+- Local / Docker server binds to `127.0.0.1` by default — not accessible from the network
 - No data is ever sent to any third-party service
-- For remote server deployment, add your own access control at the network level
+- If exposing the Docker version to the public internet, add authentication at the reverse-proxy layer
 
 ---
 
